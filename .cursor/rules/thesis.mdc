@@ -1,0 +1,121 @@
+---
+description: Persistent context for writing the user's Master's thesis (ITESO MSC) — template rules, program conventions, and voice model
+alwaysApply: true
+---
+
+# Thesis Authoring Guide (ITESO — Maestría en Sistemas Computacionales)
+
+## Purpose & workflow
+The goal is to help the user **write their own Master's thesis in English** so that drafts:
+1. **Match the user's personal writing voice** (see `## VOICE` — Samples 1–4 captured; drafting unlocked), and
+2. **Obey the ITESO MSC template** structure/formatting, and
+3. **Follow the program's writing conventions** distilled from colleague theses.
+
+Rules of engagement:
+- **Do NOT draft prose until the `## VOICE` section is filled** with the user's own AI-free samples. Averaging colleagues' styles is not acceptable as a substitute.
+- Colleague theses are **reference only** (conventions/format), never voice.
+- When drafting, write in **English**, follow the template order, and cite in IEEE numeric style.
+
+## Reference set already reviewed
+- ✅ Template user guide ("Manual de Usuario") — formatting rules.
+- ✅ The template file itself.
+- ✅ Four colleague theses (reference for conventions, not voice):
+  - Chan Topete (ES) — smart parking, YOLOv8.
+  - Medina Arriola (ES) — graph modeling of corruption networks, Neo4j.
+  - Alavez Sosa (**EN**) — ML regression for particulate matter. **Best English style/format reference.**
+  - Jaime Gaytán (ES) — Mexican Sign Language recognition, VGG16/ResNet50.
+
+## Template structure (expected chapter order)
+1. Title page (institutional boilerplate: ITESO, DESI, MSC, title, author, advisor, place/date)
+2. Agradecimientos
+3. Dedicatoria
+4. Resumen (abstract — keep to template length; some run long but shorter is safer)
+5. Índice / Table of Contents
+6. Índice de figuras (List of figures)
+7. Lista de acrónimos y abreviaturas
+8. **1. Introducción** — subsections: Antecedentes, Justificación, Problema, Objetivos (Objetivo General + Objetivos Específicos as a bulleted list), and Innovación tecnológica / Hipótesis
+9. **2. Estado del Arte**
+10. **3. Marco Teórico**
+11. **4. Desarrollo y Metodología**
+12. **5. Resultados y Discusión**
+13. **6. Conclusiones**
+14. **7. Referencias**
+15. Appendices (code listings, e.g., firmware `.h/.cpp`, MATLAB scripts)
+
+> Exact typographic specs (fonts, sizes, heading styles, margins) live in the template + user guide. Re-open those files to confirm precise values before final formatting; don't guess them.
+
+## Program writing conventions (from colleague theses)
+- **Marco Teórico = exhaustive term-by-term glossary.** Every concept, layer, algorithm, library, and metric the work uses gets its own subsection, many with **numbered display equations**. Three of four theses do this. Be thorough and heavily cited.
+- **Estado del Arte** = historical + comparative survey of prior techniques/systems with dense citations.
+- **Resultados y Discusión** = comparison-driven; present tables of experiments, then per-item bullet interpretations; pair "best case / failure case" figures.
+- **Conclusiones** can be long and subdivided (objectives recap, methodology recap, key findings, strengths/weaknesses, limitations, future work). This depth is tolerated.
+- **Figures:** "Figura N: caption" below the figure. **Tables:** labeled "Cuadro N: caption".
+- **Citations:** IEEE-style numeric `[n]`, full reference list in `7. Referencias`.
+- **Register varies by author:** Alavez/Chan lean impersonal/passive; Jaime uses first person ("diseñé", "llevé a cabo"). Default to the user's own register once samples exist; if forced to choose before then, prefer impersonal academic English (matches Alavez, the English reference).
+- Chapters may open with a short "Summary/Resumen" framing paragraph (Alavez pattern).
+
+## Project domain context (available in this repo)
+The workspace `sensor_fusion_thesis` contains sensor-fusion materials. **Confirm with the user whether this is their thesis topic** before assuming. Known artifacts:
+- ESP32 firmware (Arduino/FreeRTOS) reading a **BNO055** 9-DOF IMU and **NEO-M8N** GNSS; SD-card logging.
+- Two Kalman filters: an **orientation KF** (C++, `KF.h/.cpp`, Appendix D) and a **position KF** (MATLAB, Appendix E) using NED coordinates from GPS lat/lon.
+- A **soccer-field experiment** whose "ground-truth" trajectory was a manually constructed piecewise-linear geometric model (from field dimensions), not an independent GPS survey.
+- `makeDataset.m` + `readme.txt` (Abraham Rodríguez Vázquez): a **simulated** dataset generator (`insfilterMARG`), separate from the experimental data.
+- Known caveats already identified (useful if critiquing/writing methodology): non-standard Riccati form in text vs. correct code; Q/R labeling swap in text; raw magnetometer variance used as angle-measurement R without propagation; position-KF prediction `dt=0.05` while GPS updates at 0.5 s; GPS read task commented out in firmware; SD-write latency bottlenecking IMU sampling.
+
+## Open items / TODO
+- [x] **Get the user's own AI-free English technical writing samples** → Samples 1–4 captured (Cloud Architecture lab reports, EN — IaaS/EC2, Storage/S3-EBS, Networking/VPC, App durability/ELB; incl. intro framing, procedure narration, results/discussion, cost analysis, first-person troubleshooting & conclusions). Voice profile modeled. More samples always welcome to refine.
+- [ ] Confirm the user's actual thesis **topic** and **language** (assumed: sensor fusion, English).
+- [ ] Re-extract exact typographic specs from the template guide when formatting a real chapter.
+
+## VOICE (user's personal style — MODELED, drafting unlocked)
+Author: Abraham Rodríguez Vázquez. Native Spanish speaker writing technical English.
+Status: **Samples 1–4 captured** (Cloud Architecture lab reports, Feb 2024, EN — IaaS/EC2, Storage/S3-EBS, Cloud Networking/VPC, App durability/ELB). Coverage now includes intro framing, term-by-term definitions, procedure narration, first-person troubleshooting, results/discussion, cost analysis, and conclusions. Voice is stable across all four; more samples would only refine at the margins.
+
+**User-confirmed drafting preference:** keep his natural long-sentence, comma-splice rhythm, but quietly fix grammar and typos (the "clean" option — not verbatim, and not aggressively tightened into clipped academic English).
+
+### Distilled voice profile (emulate this when drafting)
+- **Sentence length & rhythm:** Long, multi-clause sentences are the default (often 40–70+ words), chained with commas and semicolons. He front-loads context/qualifiers, then lands the main point. Short sentences appear only for definitions or hard facts (costs, specs).
+- **Punctuation habits:** Heavy semicolons to join independent clauses; frequent inline `i.e.` and `e.g.`; comma-spliced clause stacking. Colons introduce lists.
+- **Person/register:** Predominantly **impersonal/passive** for procedure ("*was configured*", "*were read*", "an instance *is created*"). Deliberately switches to **first person for judgment/opinion** ("This is what **I consider**…", "in **my** personal computer"). Keep this split: passive for method, first person for evaluation.
+- **Explanatory instinct:** Almost every technical step is paired with the *why* — rationale, trade-offs, and especially **cost/practical framing** (savings strategies, time-to-deploy comparisons). Pragmatic, cost-conscious lens.
+- **Structure:** Enumerated numbered lists for objectives/outcomes ("The expected outcomes include: 1… 2… 3…"). Term-by-term definitions in the theoretical framework, each term as a bold lead-in followed by an explanation and a citation.
+- **Figures:** "Figure N: caption" placed **below** the figure; referenced inline in prose. Citations IEEE-numeric `[n]`.
+- **Vocabulary:** Formal academic base with occasional vivid/idiomatic flourishes ("entrenching the customer with convenience", "evading the costs", "eye rolling reaction", "become much more palpable"). Comfortable with domain jargon used precisely.
+- **Openings/closings:** Intros set a broad framing ("As with many new technologies and paradigms…") before narrowing to the specific task. Conclusions state a headline judgment, then temper it with nuance/skepticism and a resolving practical takeaway.
+- **Results/discussion moves (from Sample 2):** Comparative "The difference between X and Y is…" paragraphs to contrast concepts. Calls out a single striking quantitative highlight and reframes it for impact ("a 2000% price difference"). Draws **analogies to earlier work/sections** ("This is analogous to the EC2 pricing model from the previous laboratory"). Framing verbs: "It can be seen from the figure above that…", "It is important to note that…".
+- **Conclusions as trade-off statements:** Often opens with an explicit trade-off, then restates it inversely ("the more specific the data behavior can be known a priori, the more money can be saved. Or, conversely, the less predictable the usage is, the more expensive it becomes.").
+- **Results via self-posed questions (from Sample 3):** In Experiments/Results he sometimes frames a subsection as a direct question ("Should I define local IPs or let their IPs be auto assigned?", "What should be required for the private subnet to have internet access?") and then answers it discursively.
+- **Candid first-person reflection in conclusions (from Sample 3):** Willing to admit uncertainty and voice genuine reactions ("It is still not clear what is the motivation…", "It was surprising to see the abrupt change in pricing…", "I thought that…"), then connects it to a broader trend. Keeps the impersonal method / personal evaluation split.
+- **Provocative source-grounded openers (from Sample 3):** Intros can lead with a strong claim borrowed from a cited source ("A computer cloud is a target-rich environment for malicious individuals…") before narrowing to the task.
+- **Foundational-theory digressions (from Sample 4):** Reaches for canonical CS/OS textbook theory (Tanenbaum on Round-Robin scheduling) to ground a service's behavior, and explicitly flags the tangent ("Although CPU scheduling is not directly related to the current laboratory…") before connecting it back. Good instinct to preserve in Marco Teórico.
+- **First-person troubleshooting narration (from Sample 4):** The Problems section drops into a first-person recount of what he tried, what failed, and the fix ("I tried to gather all the commands… the instance did not boot correctly, and when I got an instance screenshot…"), including honest reactions ("this was at first surprising"). Vivid asides too ("for the protagonist of the practice").
+- **Bullet style:** Uses `●` bullets for enumerated technical tiers/options and for objectives lists, each a bold-ish lead-in term + dash/colon + explanation.
+- **Native-Spanish tells to quietly normalize (unless user wants them verbatim):** occasional noun-number/article agreement slips ("several compute instance", "an user", "up to the moment this practice is performed"), doubled words/typos ("of of", "implemed"), and light preposition/article drift. Preserve the natural long-sentence rhythm and comma-splice cadence; fix only grammar/typos.
+
+### Representative excerpts (Sample 1)
+> "As with many new technologies and paradigms, there is a transitional period in which users get to learn, experiment and get accustomed to them, typically starting with what's most familiar or common; in the case of server deployment, which was typically implemented on-premises, i.e. on dedicated physical hosts, located within an organization's IT infrastructure, now, is most commonly performed in a public cloud infrastructure…"
+
+> "This is what I consider the principal factor that distinguishes cloud providers, an intelligent resource sharing strategy that allows for competitive prices, while maintaining expected performance; Amazon has implemed this remarkably, most providers sacrifice reliability, by saturating their resources with numerous users, in order to reduce costs."
+
+> "At a first glance, the price estimates, even for a single EC2 instance of moderate size, approached $2,000 USD per year, for the typical on demand setup. This may cause an eye rolling reaction initially, and produce skepticism regarding if it is better than an on premises solution… Yet, with a more intelligent usage of the resources and an adequate yearly commitment, the prices become much more palpable."
+
+### Representative excerpts (Sample 2)
+> "The difference between S3 and EBS is that AWS Simple Storage Service provides a self-managed, and abstracted storage service, which orbits around the concept of an 'object'… On the other hand, EBS offers raw volumes that can be attached to EC2 instances… It could be seen as EBS being an IaaS offering and S3 a PaaS."
+
+> "One highlight from the previous chart is the price-ratio between the default Standard S3 tier and the most affordable S3 Glacier Deep Archive, which is 23.23, this is important since it is not a 10% or 40% difference commonly found in EC2, it is a 2000% price difference."
+
+> "A trade-off exists, between data-access determinism, and storage costs for AWS S3, i.e. the more specific the data behavior can be known a priori, the more money can be saved. Or, conversely, the less predictable the usage is, the more expensive it becomes… This is analogous to the EC2 pricing model from the previous laboratory, in which a more predictable compute usage is encouraged with the yearly commitment plans."
+
+### Representative excerpts (Sample 3)
+> "A computer cloud is a target-rich environment for malicious individuals, and the idea that moving to a cloud liberates an organization from many technical concerns, related to computer security, its a naive point of view, because outsourcing computing to a cloud generates major new security and privacy concerns."
+
+> "It is still not clear what is the motivation for creating multiple private subnets and security groups for them, since they are all within AWS infrastructure, perhaps it will be more clear in future laboratories; an initial thought, as presented in class, is to group the backend resources for an application."
+
+> "It was surprising to see the abrupt change in pricing for the public IPs, the previous free model was used for at least a decade, and now its about $44 dollars a year, I thought that the dynamic allocation of public IPv4 addresses was a robust solution… Although the scarcity of IPv4 addresses was envisioned a long time ago, which introduced IPv6, this change confirms the fast pace of growth of the internet."
+
+### Representative excerpts (Sample 4)
+> "Although CPU scheduling is not directly related to the current laboratory. In the AWS Elastic Load Balancer service, the default load balancing algorithm, for determining which target will receive the next request is Round Robin… which is best suited when both the request complexity and target processing capability are homogeneous. In the case of an heterogeneous system, this policy will fall short and suffer the same symptoms mentioned before, poor response time."
+
+> "A problem appeared when trying to install the LAMP stack on the first instance… I tried to gather all the commands from [3] into the User data field… But when running this for the first time, the instance did not boot correctly, and when I got an instance screenshot, it showed that the instance got stuck… The solution was to properly format into a bash script file the commands used i.e. adding #!/bin/bash on the top."
+
+> "Using an Elastic Load Balancer service from AWS, is a key differentiator, between a professionally deployed and scalable application, and a more low scale project; since the former would be exposed to millions of user requests simultaneously, an lacking an ELB in the system architecture would provoque imminent failures and crashes; this augmented resilience, for $200 USD a year, makes this AWS service accessible for most cloud applications."
